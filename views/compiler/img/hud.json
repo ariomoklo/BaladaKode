@@ -1,0 +1,108 @@
+{"frames": {
+
+"Background-Stage.png":
+{
+	"frame": {"x":1,"y":1,"w":1011,"h":607},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1011,"h":607},
+	"sourceSize": {"w":1011,"h":607}
+},
+"blue-0":
+{
+	"frame": {"x":1014,"y":1,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"blue-1":
+{
+	"frame": {"x":1014,"y":97,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"blue-2":
+{
+	"frame": {"x":1014,"y":193,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"blue-3":
+{
+	"frame": {"x":1014,"y":289,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"blue-sign":
+{
+	"frame": {"x":1,"y":610,"w":1088,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1088,"h":100},
+	"sourceSize": {"w":1088,"h":100}
+},
+"fight-sign":
+{
+	"frame": {"x":1,"y":712,"w":1088,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1088,"h":100},
+	"sourceSize": {"w":1088,"h":100}
+},
+"red-0":
+{
+	"frame": {"x":1014,"y":385,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"red-1":
+{
+	"frame": {"x":1014,"y":481,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"red-2":
+{
+	"frame": {"x":1091,"y":577,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"red-3":
+{
+	"frame": {"x":1091,"y":673,"w":360,"h":94},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":94},
+	"sourceSize": {"w":360,"h":94}
+},
+"red-sign":
+{
+	"frame": {"x":1,"y":814,"w":1088,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1088,"h":100},
+	"sourceSize": {"w":1088,"h":100}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "hud.png",
+	"format": "RGBA8888",
+	"size": {"w":1452,"h":915},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:38cd61352418860edbf1318709b8e993:4f3d6818bec0fe15cec6c6bcd2c3a5b8:1f12e3a3d447c2b9be1f7d9b1846589c$"
+}
+}
