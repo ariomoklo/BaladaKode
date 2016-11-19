@@ -13,4 +13,9 @@ class Leaderboard extends Controller{
         
         $this->loadView('static/leaderboard', $this->data);
     }
+    
+    public function test(){
+        $this->leaderboard = new MLeaderboard();
+        print_r($this->leaderboard->Champion());
+    }
 }

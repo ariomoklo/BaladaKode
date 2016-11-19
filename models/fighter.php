@@ -3,35 +3,8 @@
 Class Fighter extends Model{
     
     public function getFighter($id_user){
-        $result = $this->runQuery("SELECT fighter.id, fighter.id_user, fighter.id_script, fighter.name, fighter.status, fighter.win, fighter.lose, fighter.draw, script.name AS script_name FROM fighter, script WHERE fighter.id_user = '$id_user' AND fighter.id_script = script.id LIMIT 1");
+        $result = $this->runQuery("SELECT * FROM fighter WHERE fighter.id_user = '$id_user'");
         
-        if(count($result)){
-            foreach ($result as $key) {
-                
-                $totalMatch = $key['win'] + $key['lose'] + $key['draw'];
-                
-                $data = '{  "id": "'.$key['id'].'", 
-                            "id_user": "'.$key['id_user'].'", 
-                            "id_script": "'.$key['id_script'].'",
-                            "name": "'.$key['name'].'", 
-                            "status": "'.$key['status'].'", 
-                            "win": "'.$key['win'].'", 
-                            "lose": "'.$key['lose'].'",
-                            "draw": "'.$key['draw'].'",
-                            "match": "'.$totalMatch.'",
-                            "script_name": "'.$key['script_name'].'"
-                }';
-            }
-            
-            return json_decode($data);
-        }else{
-            return false;
-        }
-    }
-    
-    public function getAllOnline($id_user){
-        $result = $this->runQuery("SELECT fighter.id, fighter.name, fighter.id_user, user.username FROM fighter, user WHERE fighter.id_user != '$id_user' AND fighter.status='Online' AND fighter.id_user = user.id");
-
         if(count($result)){
             return $result;
         }else{
@@ -39,10 +12,40 @@ Class Fighter extends Model{
         }
     }
     
-    public function upFighter($id, $id_script, $name){
-        $query = sprintf("UPDATE `fighter` SET id_script='%s', name='%s' WHERE fighter.id='%s'",
-            mysql_real_escape_string($id_script),
+    public function getFighterDetail($id){
+        $result = $this->runQuery("SELECT fighter.*, user.username, user.image FROM fighter, user WHERE fighter.id_user = user.id AND fighter.id = '$id' LIMIT 1");
+        
+        if($result){
+            foreach ($result as $key => $val) {                
+                $data = $val;
+            }
+            
+            return $data;
+        }else{
+            return false;   
+        }
+    }
+    
+    public function newFighter($userid, $script, $name, $status){
+        $query = sprintf("INSERT INTO `fighter` (`id`, `id_user`, `script`, `name`, `status`, `defeated`) VALUES (NULL, '%s', '%s', '%s', '%s', '0')",
+            mysql_real_escape_string($userid),
+            mysql_real_escape_string($script),
             mysql_real_escape_string($name),
+            mysql_real_escape_string($status)
+        );
+        
+        $result = $this->runQuery($query);
+        if($result){
+            return true;
+        }else{
+            return $result;   
+        }
+    }
+    
+    public function upFighter($id, $name, $status){
+        $query = sprintf("UPDATE `fighter` SET name='%s', status='%s' WHERE fighter.id='%s'",
+            mysql_real_escape_string($name),
+            mysql_real_escape_string($status),
             mysql_real_escape_string($id)
         );
         
@@ -54,22 +57,15 @@ Class Fighter extends Model{
         }
     }
     
-    public function resultMatch($id, $point, $key){
-        
-        if($key == 'win'){
-            $query = "UPDATE `fighter` SET win='$point' WHERE fighter.id='$id'";
-            $gift = array('exp'=>1000, 'rep'=>10);
-        }else if($key == 'lose'){
-            $query = "UPDATE `fighter` SET lose='$point' WHERE fighter.id='$id'";
-            $gift = array('exp'=>500, 'rep'=>0);
-        }else if($key == 'draw'){
-            $query = "UPDATE `fighter` SET draw='$point' WHERE fighter.id='$id'";
-            $gift = array('exp'=>0, 'rep'=>(-5));
-        }
+    public function upScript($id, $script){
+        $query = sprintf("UPDATE `fighter` SET script='%s' WHERE fighter.id='%s'",
+            mysql_real_escape_string($script),
+            mysql_real_escape_string($id)
+        );
         
         $result = $this->runQuery($query);
         if($result){
-            return $gift;
+            return true;
         }else{
             return $result;   
         }
@@ -88,75 +84,13 @@ Class Fighter extends Model{
         }
     }
     
-    public function newMatch($red, $blue, $win, $lose, $draw){
-        $result = $this->runQuery("INSERT INTO `match` (`id`, `id_red`, `id_blue`, `sim`, `win`, `lose`, `draw`) VALUES (NULL, '$red', '$blue', '1', '$win', '$lose', '$draw')");
+    public function delFighter($id){
+        $result = $this->runQuery("DELETE FROM `fighter` WHERE id='$id'");
         
-        $match = $this->runQuery("SELECT id FROM `match` WHERE id_red='$red' AND id_blue='$blue' OR win='$win' OR lose='$lose' OR draw='$draw'");
-        foreach ($match as $key) {
-            $data = $key['id'];
-        }
-        
-        if($data){
-            return $data;
+        if($result){
+            return true;
         }else{
             return $result;   
-        }
-    }
-    
-    public function getMatch($id){
-        $result = $this->runQuery("SELECT * FROM `match` WHERE id='$id' LIMIT 1");
-
-        if(count($result)){
-            foreach ($result as $key => $value) {
-                $data = $value;
-            }
-
-            return $data;
-        }else{
-            return false;
-        }
-    }
-    
-    public function matchHistory($id){
-        $history = $this->runQuery("SELECT * FROM `match` WHERE id_red='$id' OR id_blue='$id'");
-        $fighterData = $this->runQuery('SELECT fighter.id, user.username, fighter.name FROM fighter, user WHERE fighter.id_user = user.id');
-        
-        $data = array();
-        foreach($history as $match){
-            $row = array();
-            
-            if($match['id_red'] == $id){
-                $oppo = $match['id_blue'];
-            }else{
-                $oppo = $match['id_red'];
-            }
-            
-            foreach($fighterData as $fighter){
-                if($fighter['id'] == $oppo){
-                    $row['id'] = $match['id'];
-                    $row['opName'] = $fighter['username'];
-                    $row['fName'] = $fighter['name'];
-                    $row['sim'] = $match['sim'];
-                    
-                    if($match['draw']){
-                        $row['result'] = 'Draw';
-                    }else{
-                        if($match['win'] == $id){
-                            $row['result'] = 'Win';
-                        }else{
-                            $row['result'] = 'Lose';
-                        }
-                    }
-                    break;
-                }
-            }
-            $data[] = $row;
-        }
-        
-        if(count($data)){
-            return $data;
-        }else{
-            return false;
         }
     }
 }

@@ -13,10 +13,10 @@ class Main extends Controller{
         }
 	}
 
-    public function PasstoHash($param){
-        $crypt = password_hash($param[0], PASSWORD_DEFAULT);
+    public function PasstoHash($pass){
+        $crypt = password_hash($pass, PASSWORD_DEFAULT);
 
-        echo strrev($crypt);;
+        return strrev($crypt);;
     }
 
     // public function testhash($param){
@@ -46,6 +46,29 @@ class Main extends Controller{
             }
         }else{
             echo json_encode("noUser");
+        }
+    }
+    
+    public function Gsignin(){
+        $username = $_POST['user'];
+        $image = $_POST['image'];
+        
+        $this->user = new User();
+        $userfound = $this->user->searchUser($username);
+        if($userfound){
+            Session::set('userid', $userfound['id']);
+            Session::set('username', $userfound['name']);
+            echo json_encode($userfound);
+        }else{
+            $fName = explode(" ", $username);
+            $pass = $this->PasstoHash("google".$fName[0]);
+            
+            $this->user->newAccount($username, $pass, $image);
+            $newUser = $this->user->searchUser($username);
+            $this->user->newProfile($newUser['id']);
+            Session::set('userid', $newUser['id']);
+            Session::set('username', $newUser['name']);
+            echo json_encode($newUser);
         }
     }
 

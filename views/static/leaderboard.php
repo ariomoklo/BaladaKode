@@ -156,14 +156,17 @@
                             <thead style="background-color: ghostwhite;">
                                 <td><b>#</b></td>
                                 <td><b>Username</b></td>
-                                <td><b>Win</b></td>
-                                <td><b>Match</b></td>
+                                <td style="text-align: center;"><b>Perfect Battle</b></td>
                             </thead>
                             <tbody>
 
-                                <?php foreach($data['cham'] as $rank => $value){
-                                    echo '<tr><td>'.($rank+1).'</td><td>'.$value['username'].'</td><td>'.$value['win'].'</td><td>'.$value['match'].'</td>
-                                    </tr>';
+                                <?php if($data['cham']){
+                                        foreach($data['cham'] as $rank => $value){
+                                            echo '<tr><td>'.($rank+1).'</td><td>'.$value['username'].'</td><td>'.$value['match'].'</td>
+                                            </tr>';
+                                        }
+                                    }else{
+                                        echo '<tr><td colspan="3" style="text-align: center;">Data Empty</td></tr>';
                                 }?>
                             </tbody>
                         </table>

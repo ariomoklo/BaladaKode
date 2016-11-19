@@ -5,6 +5,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-signin-client_id" content="775836621108-lfm7lael8nlh5hq5v611jmqs9ub14jhh.apps.googleusercontent.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -26,7 +27,12 @@
     <link href="<?php echo ASSETS;?>codemirror/theme/ambiance.css" rel="stylesheet" type="text/css">
     <script src="<?php echo ASSETS;?>js/jquery.js"></script>
     <script src="<?php echo ASSETS;?>js/phaser.min.js"></script>
+    
+    <link href="<?php echo ASSETS;?>css/prism.css" rel="stylesheet" type="text/css">
+    <script src="<?php echo ASSETS;?>js/prism.js"></script>
 
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -44,6 +50,10 @@
             z-index: 1;
             top: 0;
             left: 0;
+        }
+        
+        a[campaign-id], a[pick-battle]{
+            cursor: pointer;
         }
         
         div[notif]{
@@ -139,7 +149,7 @@
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
         
-        .dashboard-menu:hover > img{
+        .dashboard-menu:hover > div{
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
         
@@ -195,7 +205,7 @@
         }
         
         .widget{
-            background-color: #245bb5;
+            background-color: #bc3838;
         }
         
        .win{
@@ -205,14 +215,17 @@
         .lose{
             background-color: #bc3838;
         }
+        
+        .good{
+            background-color: lightblue;
+        }
+        
+        .perfect{
+            background-color: lightgreen;
+        }
     </style>
 
 </head>
-    
-    <audio autoplay loop>
-        <source src="<?php echo ASSETS;?>sounds/Monkey-Drama.mp3" type="audio/mpeg">
-    </audio>
-
     <header class="loading-view">
         <div class="col-lg-12" style="height: 20%;"></div>
         <div mid class="col-lg-offset-4 col-lg-4">
@@ -256,10 +269,7 @@
                         <a href="leaderboard">Leaderboard</a>
                     </li>
                     <li>
-                        <a href="about.html">Tutorial</a>
-                    </li>
-                    <li>
-                        <a href="dashboard/logout">Logout</a>
+                        <a logout-butt style="cursor: pointer;">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -267,9 +277,18 @@
         </div>
         <!-- /.container -->
     </nav>
+    
+    <script type="text/javascript">
+        $('a[logout-butt]').click(function(){
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              window.location.href = 'dashboard/logout';
+            }); 
+        });
+    </script>
 
     <!-- Header Carousel -->
-    <header class="carousel slide" style="height: 15%;">
+    <header class="carousel slide" style="height: 90px;">
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">

@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-signin-client_id" content="775836621108-448tg536jrfufu54j8u5t3q5k1ur8cg6.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="775836621108-lfm7lael8nlh5hq5v611jmqs9ub14jhh.apps.googleusercontent.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -86,7 +86,7 @@
             <br>
             <div class="col-lg-8">
                 <div class="col-md-12">
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    
                 </div>
             </div>
             <div class="col-lg-4">
@@ -104,10 +104,11 @@
                         <div class="col-md-4">
                             <a class="btn btn-default btn-block" id="login">Login</a> 
                         </div>
-                        <div class="col-md-8">
-                            <p style="padding-top: 8px;">
-                                <a href="">sign up</a> or <a href="">forget password ?</a>
-                            </p>
+                        <div class="col-md-2">
+                            <p style="padding-top: 8px;"> or </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
                         </div>
                     </div>
                 </div>
@@ -133,17 +134,29 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo ASSETS;?>js/bootstrap.min.js"></script>
 
-<!--
     <script type="text/javascript">
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail());
+            user = profile.getName();
+            image = profile.getImageUrl();
+            
+            var login = $.post( 'main/Gsignin', { 
+                user: user,
+                image: image
+            });
+            
+            login.done(function( data ) {
+                data = JSON.parse(data);
+                if(data == "noUser"){
+                    panel.innerHTML = "Login : User account tidak ditemukan"
+                }else if(data == "noPass"){
+                    panel.innerHTML = "Login : Password salah"
+                }else{
+                    window.location = "dashboard";
+                }
+            });
         }
     </script>
--->
     
     <script type="text/javascript">            
         $('#login').click(function () {

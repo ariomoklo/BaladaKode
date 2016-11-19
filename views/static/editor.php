@@ -76,10 +76,6 @@
     </style>
 
 </head>
-    
-<audio autoplay loop>
-    <source src="<?php echo ASSETS;?>sounds/Monkey-Drama.mp3" type="audio/mpeg">
-</audio>
 
 <body>
 
@@ -141,36 +137,66 @@
                     <li class="active">Editor</li>
                 </ol>
             </div>
-            <div class="col-lg-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="height: 50px;">
-                        <h4 id='nameScript' script-name="<?php echo $data['name'];?>" style="width: 50%; float:left; margin:0px;"><?php 
-                            if($data['id'] != 'new'){
-                                echo $data['username'].'/'.$data['name'].'.js';    
-                            }else{
-                                echo $data['username'].'/ <input placeholder="Script Name" type="text" style="width:50%; display:inline;" class="form-control" id="scriptname"> .js';
-                            }
-                            
-                        ?></h4>
-                        <button id="link" class="btn btn-default pull-right">Compile</button>
-                        <button id="save" class="btn btn-primary pull-right" style="margin-right: 15px;" disabled>Save</button>
-                    </div>
-                    <div class="panel-body" style="padding:0px;">
-                        <textarea id="code" name="code"><?php echo $data['script'];?></textarea>
+            <div class="col-lg-12">
+                
+                <?php if($data['id'] == 'new'){
+                    echo '<div class="col-lg-4">
+                        <label for="edit-name">Name</label>
+                        <div class="input-group" style="width: 100%;">
+                          <input type="text" class="form-control" id="scriptname" aria-describedby="basic-addon3">
+                        </div>
+                    </div>';
+                        
+                        if($data['username'] == 'ariomoklo'){
+                            echo '<div class="col-lg-4" style="padding-bottom: 20px;">
+                                <label for="edit-name">Status</label>
+                                <div class="input-group" style="width: 100%;">
+                                  <input type="text" class="form-control" id="dat-stat" aria-describedby="basic-addon3">
+                                </div>
+                            </div>';
+                        }else{
+                            echo '<div class="col-lg-4" style="padding-bottom: 20px;">
+                                <label for="dat-fstat">Status</label>
+                                <div class="input-group" style="width: 100%;">
+                                    <select id="dat-stat" class="form-control">
+                                      <option value="Online">Online</option>
+                                      <option value="Offline">Offline</option>
+                                    </select>
+                                </div>
+                            </div>';
+                        }
+                }?>
+                
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="height: 50px;">
+                            <h4 id='nameScript' dat-username="<?php echo $data['username'];?>" script-name="<?php echo $data['name'];?>" style="width: 50%; float:left; margin:0px; margin-top: 5px;"><?php 
+                                if($data['id'] != 'new'){
+                                    echo $data['username'].'/'.$data['name'].'.js';    
+                                }else{
+                                    echo $data['username'];
+                                }
+
+                            ?></h4>
+                            <button id="link" class="btn btn-default pull-right">Compile</button>
+                            <button id="save" class="btn btn-primary pull-right" style="margin-right: 15px;" disabled>Save</button>
+                        </div>
+                        <div class="panel-body" style="padding:0px;">
+                            <textarea id="code" name="code"><?php echo $data['script'];?></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="height: 50px;">
-                        <h4 style="width: 50%; float:left;" class="panel-tittle">Console Panel</h4>
-                    </div>
-                    <div class="panel-body" style="padding:0px;">
-                        <textarea id="error" name="error"></textarea>
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="height: 50px;">
+                            <h4 style="width: 50%; float:left;" class="panel-tittle">Console Panel</h4>
+                        </div>
+                        <div class="panel-body" style="padding:0px;">
+                            <textarea id="error" name="error"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+            </div>            
             <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
               <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
@@ -195,135 +221,32 @@
                 lineNumbers : true,
                 readOnly : 'nocursor',
                 mode : false
-            }); 
+            });
+            
+            $('#scriptname').keyup(function(){
+                name = $(this).val();
+                user = $('#nameScript').attr('dat-username');
+                
+                $('#nameScript').text(user+'/'+name+'.js');
+            });
 
             $('#link').click(function () {
                 error.setValue('\[output\]:\ncompiling...\n');
                 var codeValue = code.getValue();
-//                running = Function(codeValue+'\n callBack();');
-//                running();
-                var red = new scriptHandler(codeValue+'callBack();', 'red');
-                redseq = red.sequence();
-                
-                var blue = new scriptHandler('leftPunch(); leftKick();', 'blue');
-                blueseq = blue.sequence();
-                
-                if(redseq.length >= blueseq.length){
-                    for(i=0; i< redseq.length; i++){
-                        if(typeof blueseq[i] != 'undefined'){
-                            console.log('red :'+redseq[i].key + ' | '+ redseq[i].value);
-                            console.log('blue :'+blueseq[i].key + ' | '+ blueseq[i].value);
-                            
-                            if(checkMove(redseq[i], blueseq[i])){
-                                console.log('bintang untuk merah');
-                            }
-                            
-                            if(checkMove(blueseq[i], redseq[i])){
-                                console.log('bintang untuk biru');
-                            }
-                            
-                        }else{
-                            console.log('red :'+redseq[i].key + ' | '+redseq[i].value);
-                            console.log('blueseq empty');
-                            
-                            if(checkMove(redseq[i], {key: 'none', value: 0, pos: 0})){
-                                console.log('bintang untuk merah');
-                            }
-                        }
-                        console.log('batch no : '+i);
-                    }
-                }else{
-                    for(i=0; i< blueseq.length; i++){
-                        if(typeof redseq[i] != 'undefined'){
-                            console.log('red :'+redseq[i].key + ' | '+redseq[i].value);
-                            console.log('blue :'+blueseq[i].key + ' | '+blueseq[i].value);
-                            
-                            if(checkMove(redseq[i], blueseq[i])){
-                                console.log('bintang untuk merah');
-                            }
-                            
-                            if(checkMove(blueseq[i], redseq[i])){
-                                console.log('bintang untuk biru');
-                            }
-                        }else{
-                            console.log('blue :'+blueseq[i].key + ' | '+blueseq[i].value);
-                            console.log('redseq empty');
-                            
-                            if(checkMove(blueseq[i], {key: 'none', value: 0, pos: 0})){
-                                console.log('bintang untuk biru');
-                            }
-                        }
-                        console.log('batch no : '+i);
-                    }
-                }
-                
+                var red = new scriptHandler(codeValue);
+                redseq = red.sequence();             
+                callBack();
             });
-            
-            function checkMove(pl, en){                
-                //jarak = pl.pos - en.pos;
-                //if(Math.abs(jarak) == 1){
-                    if(pl.key == 'punch'){
-                        if(en.key == 'kick'){
-                            return false;
-                        }else if(en.key == 'block'){
-                            return false;
-                        }else if(en.key == 'jump'){
-                            return true;
-                        }else if(en.key == 'evade'){
-                            return false;
-                        }else if(en.key == 'none'){
-                            return true;
-                        }else if(en.key == 'punch'){
-                            return false;
-                        }
-                    }
-
-                    if(pl.key == 'kick' && pl.value == 0){
-                        if(en.key == 'kick'){
-                            return false;
-                        }else if(en.key == 'block'){
-                            return true;
-                        }else if(en.key == 'jump'){
-                            return true;
-                        }else if(en.key == 'evade'){
-                            return false;
-                        }else if(en.key == 'none'){
-                            return true;
-                        }else if(en.key == 'punch'){
-                            return true;
-                        }
-                    }
-                    
-                    if(pl.key == 'kick' && pl.value == 1){
-                        if(en.key == 'kick'){
-                            if(en.value == 0){
-                                return true;
-                            }else{
-                                return false;
-                            }
-                        }else if(en.key == 'block'){
-                            return true;
-                        }else if(en.key == 'jump'){
-                            return true;
-                        }else if(en.key == 'evade'){
-                            return false;
-                        }else if(en.key == 'none'){
-                            return true;
-                        }else if(en.key == 'punch'){
-                            return true;
-                        }
-                    }
-                //}
-            }
 
             $('#save').click(function () {
-                idScript = $('#planted').attr('data-script');
+                id = $('#planted').attr('data-script');
                 idUser = $('#planted').attr('data-user');
                 name = $('#scriptname').val();
+                status = $('#dat-stat').val();
                 script = code.getValue();
 
-                if(idScript == 'new'){
-                    $.post( "../newscript", { userid:idUser,  name:name, script:script }).done(function( data ) {
+                if(id == 'new'){
+                    $.post( "../newFighter", { userid:idUser, script:script, name:name, status:status }).done(function( data ) {
                         if(data == true){
                             document.getElementById('alertMsg').innerHTML = name+'.js saved';
                             $('.bs-example-modal-sm').modal('show');
@@ -334,7 +257,7 @@
                     });   
                 }else{
                     name = $('#nameScript').attr('script-name');
-                    $.post( "../upscript", { id:idScript, userid:idUser, name:name, script:script }).done(function( data ) {
+                    $.post( "../upScript", { id:id, script:script }).done(function( data ) {
                         if(data == true){
                             document.getElementById('alertMsg').innerHTML = name+'.js saved';
                             $('.bs-example-modal-sm').modal('show');
@@ -344,10 +267,13 @@
                         }
                     });
                 }
+                
+                $(this).attr('disabled', 'disabled');
+                console.log('script saved.');
             });
 
             function callBack(){
-                error.setValue(error.getValue()+'compiling done.\n');
+                console.log('compiling done.')
                 $('#save').removeAttr('disabled');
             }
             
@@ -363,7 +289,7 @@
             };
             console.error = console.debug = console.info =  console.log
         </script>
-        <script src="<?php echo VIEW;?>compiler/scriptHandler.js"></script>
+        <script src="<?php echo VIEW;?>battle/scriptHandler.js"></script>
     </div>
     <!-- /.container -->
 

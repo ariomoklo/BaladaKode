@@ -9,11 +9,11 @@ function __autoload($class){
 	$model_class = ROOT.DS."models".DS.strtolower($class).".php";
 
 	if(file_exists($lib_class)){
-		require_once($lib_class);
+		require($lib_class);
 	}else if(file_exists($controller_class)){
-		require_once($controller_class);
+		require($controller_class);
 	}else if(file_exists($model_class)){
-		require_once($model_class);
+		require($model_class);
 	}
 }
 

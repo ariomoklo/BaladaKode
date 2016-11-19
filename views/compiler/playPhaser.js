@@ -257,9 +257,7 @@ var playState = {
     create: function(){
         posX = 170;
         posY = this.game.world.height;
-        
-        console.log(posX + ' | ' + posY);
-        
+                
         //this.background = game.add.image(this.game.world.centerX, this.game.world.centerY, 'hud', 'Background-Stage.png');
         redHud = game.add.image(0, 0, 'hud', 'red-0');
         blueHud = game.add.image(this.game.world.width, 0, 'hud', 'blue-0');
@@ -297,9 +295,7 @@ var playState = {
         blueBot.scale.setTo(-0.85, 0.85);
         
         board.visible = false;
-        
-        console.log(redBot.width + ' | ' + this.game.world.width);
-        
+                
 //        redHud.frameName = 'red-2';
 //        blueHud.frameName = 'blue-3';
         

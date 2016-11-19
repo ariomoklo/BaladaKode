@@ -35,14 +35,6 @@ Class User extends Model{
     }
     
     public function levelCheck($exp, $level){
-        if($level <= 10){
-            $constant = 500;
-        }else if($level <= 30){
-            $constant = 700;
-        }else{
-            $constant = 1000;
-        }
-        
         $nextExp = 0;
         for($i=1; $i<=$level; $i++){
             $nextExp += (500 + (intval($i/20)*500)) * $i;
@@ -100,39 +92,50 @@ Class User extends Model{
         return $this->runQuery("UPDATE `profile` SET achievement='$achieved' WHERE id_user='$userid'");
     }
     
-    public function checkAchieved($fighter){
+    public function checkAchieved(){
+        $fight = $this->runQuery("SELECT * FROM fight WHERE fight.player = '$this->id'");
         
-        $win = $fighter->win;
-        $lose = $fighter->lose;
-        $draw = $fighter->draw;
-        $match = $fighter->match;
+        $match = count($fight);
+        $perfect = 0;
+        $good = 0;
+        $none = 0;
+        foreach($fight as $val){
+            if($val['result'] == 'perfect'){
+                $perfect++;
+            }else if($val['result'] == 'good'){
+                $good++;
+            }else{
+                $none++;
+            }
+        }
+        
         $achieved = array();
         
-        if($win > 3 && $lose == 0){
+        if($match > 3){
             $achieved[] = 'unbre';
         }
         
-        if($win > 5 && $lose == 0){
+        if($match > 5){
             $achieved[] = 'crush';
         }
         
-        if($match > 10){
+        if($this->rep > 99){
             $achieved[] = 'famef';
         }
         
-        if($win == $lose && $lose == $draw && $win != 0){
+        if($none > $perfect && $perfect == $good && $none > 0){
             $achieved[] = 'joker';
         }
         
-        if($lose > $win && $win > $draw){
+        if($none > 0){
             $achieved[] = 'poops';
         }
         
-        if($lose > 0){
+        if($none > 1){
             $achieved[] = 'loser';
         }
         
-        if($win > 0){
+        if($good > 0){
             $achieved[] = 'stfig';
         }
         
@@ -179,6 +182,24 @@ Class User extends Model{
         }
     }
 
+    public function newAccount($user, $pass, $image){
+        $result = $this->runQuery("INSERT INTO `user` (`id`, `username`, `password`, `image`) VALUES (NULL, '$user', '$pass', '$image')");
+        if($result){
+            return true;
+        }else{
+            return $result;
+        }
+    }
+    
+    public function newProfile($userid){
+        $result = $this->runQuery("INSERT INTO `profile` (`id`, `id_user`, `exp`, `level`, `reputation`, `achievement`) VALUES (NULL, '$userid', '0', '0', '0', NULL)");
+        if($result){
+            return true;
+        }else{
+            return $result;
+        }
+    }
+    
     public function searchUser($name){
         $result = $this->runQuery("SELECT * FROM user WHERE user.username = '$name' LIMIT 1");
 

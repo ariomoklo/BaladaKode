@@ -1,4 +1,4 @@
-
+    <br><br>
        <!-- Footer -->
     <footer style="z-index: 2;">
         <div class="bordering" style="background-color: #4e565e"></div>
